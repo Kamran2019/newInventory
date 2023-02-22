@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      id="main"
+      class="d-flex justify-content-center align-items-center flex-column m-3"
+      style="height: 75rem"
+    >
+      <nav class="navbar navbar-light bg-light navbar-expand-lg m-2">
+        <div class="container-fluid">
+          <button class="btn btn-secondary" id="back-btn">Back</button>
+        </div>
+      </nav>
+      <div class="container border rounded" style="background-color: #f0f3f5">
+        <div class="d-flex justify-content-center p-2">
+          <h1 style="font-weight: bold; font-style: italic">Add Asset</h1>
+        </div>
+        <form autocomplete="off" id="add-asset-foam">
+          <div class="form-group form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="device-serial-number"
+              name="device-serial-number"
+              placeholder="Device Serial Number"
+              required
+            />
+            <label for="device-serial-number">Device Serial Number</label>
+          </div>
+          <div class="p-2"></div>
+          <div class="form-group form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              placeholder="Device Name"
+              required
+            />
+            <label for="name" class="form-label">Name</label>
+          </div>
+          <div class="p-2"></div>
+          <div class="form-group form-floating">
+            <textarea
+              class="form-control"
+              id="description"
+              name="description"
+              rows="3"
+              placeholder="Description"
+              required
+            ></textarea>
+            <label for="description">Description</label>
+          </div>
+          <div class="p-2"></div>
+          <div class="form-group form-floating">
+            <input
+              type="date"
+              class="form-control"
+              id="purchased-date"
+              name="purchased-date"
+              placeholder="Purchased Date"
+              required
+            />
+            <label for="purchased-date">Purchased Date</label>
+          </div>
+          <div class="p-2"></div>
+          <div class="form-group form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="purchased-from"
+              name="purchased-from"
+              placeholder="Purchased From"
+              required
+            />
+            <label for="purchased-from">Purchased From</label>
+          </div>
+          <div class="p-2"></div>
+          <div class="form-group form-floating">
+            <input
+              type="number"
+              class="form-control"
+              id="purchase-price"
+              name="purchase-price"
+              step="1"
+              min="0"
+              max="9"
+              placeholder="Purchase Price"
+              required
+            />
+            <label for="purchase-price">Purchase Price</label>
+          </div>
+          <div class="p-2"></div>
+          <div class="form-group form check">
+            <label>Device Type</label><br />
+            <div class="form-check form-check-inline required">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="device-type"
+                id="device-type-laptop"
+                value="Laptop"
+                required
+              />
+              <label class="form-check-label" for="device-type-laptop">
+                Laptop
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="device-type"
+                id="device-type-phone"
+                value="Phone"
+                required
+              />
+              <label class="form-check-label" for="device-type-phone">
+                Phone
+              </label>
+            </div>
+          </div>
+
+          <div class="p-2"></div>
+          <div class="form-group form check">
+            <label>Purchase Type</label><br />
+            <div class="form-check form-check-inline required">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="purchase-type"
+                id="purchase-type-new"
+                value="new"
+                required
+              />
+              <label class="form-check-label" for="purchase-type-new">
+                New
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="purchase-type"
+                id="purchase-type-used"
+                value="used"
+                required
+              />
+              <label class="form-check-label" for="purchase-type-used">
+                Used
+              </label>
+            </div>
+          </div>
+          <div class="p-2"></div>
+          <div class="form-group">
+            <label for="condition-score">Condition Score</label>
+            <select
+              class="form-control"
+              id="condition-score"
+              name="condition-score"
+              required
+            >
+              <option value="">-- Select --</option>
+              <option value="very-good">Very Good</option>
+              <option value="good">Good</option>
+              <option value="needs-maintenance">Needs Maintenance</option>
+              <option value="needs-replacement">Needs Replacement</option>
+            </select>
+          </div>
+          <div class="d-flex justify-content-center p-2">
+            <button
+              type="submit"
+              class="btn btn-primary mx-auto"
+              id="add-asset-button"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+      <div
+        id="hidden-div"
+        style="display: none"
+        class="alert m-4 alter-dismissible"
+        role="alert"
+      >
+        <p id="hidden-div-message">
+          The device of this serial Number Already exist
+        </p>
+      </div>
+    </div>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+      integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+      integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="add-asset.js"></script>
+  </body>
+</html>
