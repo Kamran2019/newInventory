@@ -181,6 +181,7 @@ async function addToIssuesService(deviceSerialNumber, body) {
         issueId: id,
         issue: body.issue,
         resolution: body.resolution || "",
+        issueDate: new Date().toISOString().split("T")[0],
       };
       inventory.Issues.push(newIssue);
       await db
@@ -343,6 +344,7 @@ async function getAllFreeInventoryService() {
         inventoryArray.push({ id: doc.id, ...data });
       }
     });
+    //    console.log(inventoryArray);
     return { result: 0, data: inventoryArray };
   } catch (error) {
     return { result: 2, message: "Internal server error" };

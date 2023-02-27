@@ -10,14 +10,14 @@ const handleSubmit = async () => {
   let issueFlag = true;
   if (issue === "") {
     issueFlag = false;
-//    console.log(issueFlag);
+    //    console.log(issueFlag);
   }
 
   const resolution = document.querySelector("#resolution").value;
   let resolutionFlag = true;
   if (resolution === "") {
     resolutionFlag = false;
-//    console.log(resolutionFlag);
+    //    console.log(resolutionFlag);
   }
 
   let input;
@@ -35,14 +35,17 @@ const handleSubmit = async () => {
   hiddenDiv.style.display = "none";
 
   if (issueFlag) {
-//    console.log(input);
+    //    console.log(input);
     try {
-      const result = await axios.patch(`/inventory/${id}/issue`, {
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.getItem("token")}`;
+      const result = await axios.patch(`/api/inventory/${id}/issue`, {
         ...input,
       });
-//      console.log(result.data.result);
+      //      console.log(result.data.result);
       if (result.data.result === 2) {
-//        console.log(hiddenDiv);
+        //        console.log(hiddenDiv);
         hiddenDiv.classList.remove("alert-success");
         hiddenDiv.classList.add("alert-danger");
         hiddenDivMessage.textContent =
@@ -50,14 +53,14 @@ const handleSubmit = async () => {
         hiddenDiv.style.display = "block";
       }
       if (result.data.result === 0) {
-//        console.log(hiddenDiv);
+        //        console.log(hiddenDiv);
         hiddenDiv.classList.remove("alert-danger");
         hiddenDiv.classList.add("alert-success");
         hiddenDivMessage.textContent = "Added Successfully";
         hiddenDiv.style.display = "block";
       }
     } catch (error) {
-//      console.log(error);
+      //      console.log(error);
     }
 
     issueFoam.reset();

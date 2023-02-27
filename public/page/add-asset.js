@@ -5,30 +5,31 @@ const assetFoam = document.querySelector("#add-asset-foam");
 const backBtn = document.querySelector("#back-btn");
 
 const handleSubmit = async () => {
-  const DeviceSerialNumber = document.querySelector(
-    "#device-serial-number"
-  ).value;
+  const DeviceSerialNumber = document
+    .querySelector("#device-serial-number")
+    .value.trim();
   let deviceSerialNumberFlag = true;
   if (DeviceSerialNumber === "" || DeviceSerialNumber.includes(" ")) {
     deviceSerialNumberFlag = false;
     //    console.log(deviceSerialNumberFlag);
   }
+  console.log(DeviceSerialNumber.length);
 
-  const Name = document.querySelector("#name").value;
+  const Name = document.querySelector("#name").value.trim();
   let nameFlag = true;
   if (Name === "") {
     nameFlag = false;
     //    console.log(nameFlag);
   }
 
-  const Description = document.querySelector("#description").value;
+  const Description = document.querySelector("#description").value.trim();
   let descriptionFlag = true;
   if (Description === "") {
     descriptionFlag = false;
     //    console.log(descriptionFlag);
   }
 
-  const PurchasedDate = document.querySelector("#purchased-date").value;
+  const PurchasedDate = document.querySelector("#purchased-date").value.trim();
   console.log(typeof PurchasedDate + "the date" + PurchasedDate);
   let purchasedDateFlag = true;
   if (PurchasedDate === "") {
@@ -36,7 +37,7 @@ const handleSubmit = async () => {
     //    console.log(purchasedDateFlag);
   }
 
-  const PurchasedFrom = document.querySelector("#purchased-from").value;
+  const PurchasedFrom = document.querySelector("#purchased-from").value.trim();
   let purchasedFromFlag = true;
   if (PurchasedFrom === "") {
     purchasedFromFlag = false;
@@ -115,7 +116,12 @@ const handleSubmit = async () => {
     PurchasePriceFlag
   ) {
     try {
-      const result = await axios.post("/inventory", { ...input });
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.getItem("token")}`;
+      const result = await axios.post("/api/inventory", {
+        ...input,
+      });
       //      console.log(result.data.result);
       if (result.data.result === 3) {
         //        console.log(hiddenDiv);
@@ -188,15 +194,18 @@ const handleSubmit = async () => {
 };
 
 addAsset.addEventListener("click", async (e) => {
+  console.log(`in add asset`);
   e.preventDefault();
   await handleSubmit();
 });
 
 assetFoam.addEventListener("submit", async (e) => {
+  console.log(`in add asset`);
+
   e.preventDefault();
   await handleSubmit();
 });
 
 backBtn.addEventListener("click", () => {
-  window.location.href = `/`;
+  window.location.href = `/page/all-inventory`;
 });

@@ -1,8 +1,8 @@
 
-const Addnewinventory = async (req, res) => {
+const addNewInventory = async (req, res) => {
   res.render("add-asset")
 };
 
 module.exports = {
-    Addnewinventory,
+  addNewInventory,
 };

@@ -6,7 +6,7 @@ let hiddenDivMessage = document.querySelector("#hidden-div-message");
 const id = new URLSearchParams(window.location.search).get("id");
 const foamDiv = document.querySelector("#foam-div");
 const errorDiv = document.querySelector("#not-found-div");
-const furtherInfoSelector = document.querySelector("#further-info-selector");
+//const furtherInfoSelector = document.querySelector("#further-info-selector");
 let assignedListDiv = document.querySelector("#assigned-list");
 let issueListDiv = document.querySelector("#issue-list");
 let commentListDiv = document.querySelector("#comment-list");
@@ -31,9 +31,12 @@ const resolveIssueFoamModel = document.querySelector("#resolve-issue-foam");
 
 const getSingleAsset = async () => {
   try {
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${localStorage.getItem("token")}`;
     const {
       data: { result, data },
-    } = await axios.get(`/inventory/${id}`);
+    } = await axios.get(`/api/inventory/${id}`);
     if (result === 1) {
     } else {
       //      console.log(data);
@@ -74,6 +77,7 @@ const setIssue = (Issues) => {
     return `<tr>
     <td>${issue.issueId}</td>
     <td>${issue.issue}</td>
+    <td>${issue.issueDate}</td>
     <td>${
       issue.resolution === ""
         ? `<button class="btn btn-primary Resolve" type="button" data-bs-toggle="modal" data-bs-target="#Resolve-issue-modal" data-id="${issue.issueId}" data-issue="${issue.issue}"> Resolve</button>`
@@ -138,7 +142,10 @@ const modalHandleSubmit = async () => {
       issueId: issueIdModal.value,
       resolution: resolutionModal.value,
     };
-    const result = await axios.patch(`/inventory/${id}/resolution`, {
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${localStorage.getItem("token")}`;
+    const result = await axios.patch(`/api/inventory/${id}/resolution`, {
       ...input,
     });
     if (result.data.result === 0) {
@@ -207,30 +214,30 @@ const setInitialValue = async () => {
 };
 
 const handleSubmit = async () => {
-  const DeviceSerialNumber = document.querySelector(
-    "#device-serial-number"
-  ).value;
+  const DeviceSerialNumber = document
+    .querySelector("#device-serial-number")
+    .value.trim();
   let deviceSerialNumberFlag = true;
   if (DeviceSerialNumber === "") {
     deviceSerialNumberFlag = false;
     //    console.log(deviceSerialNumberFlag);
   }
 
-  const Name = document.querySelector("#name").value;
+  const Name = document.querySelector("#name").value.trim();
   let nameFlag = true;
   if (Name === "") {
     nameFlag = false;
     //  console.log(nameFlag);
   }
 
-  const Description = document.querySelector("#description").value;
+  const Description = document.querySelector("#description").value.trim();
   let descriptionFlag = true;
   if (Description === "") {
     descriptionFlag = false;
     //    console.log(descriptionFlag);
   }
 
-  const PurchasedDate = document.querySelector("#purchased-date").value;
+  const PurchasedDate = document.querySelector("#purchased-date").value.trim();
   //  console.log(typeof PurchasedDate + "the date" + PurchasedDate);
   let purchasedDateFlag = true;
   if (PurchasedDate === "") {
@@ -238,7 +245,7 @@ const handleSubmit = async () => {
     //    console.log(purchasedDateFlag);
   }
 
-  const PurchasedFrom = document.querySelector("#purchased-from").value;
+  const PurchasedFrom = document.querySelector("#purchased-from").value.trim();
   let purchasedFromFlag = true;
   if (PurchasedFrom === "") {
     purchasedFromFlag = false;
@@ -324,7 +331,10 @@ const handleSubmit = async () => {
     PurchasePriceFlag
   ) {
     try {
-      const result = await axios.patch(`/inventory/${id}`, { ...input });
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.getItem("token")}`;
+      const result = await axios.patch(`/api/inventory/${id}`, { ...input });
       //      console.log(result.data.result);
       if (result.data.result === 0) {
         //        console.log(hiddenDiv);
@@ -390,43 +400,43 @@ const handleSubmit = async () => {
   }
 };
 
-furtherInfoSelector.addEventListener("change", () => {
-  //  console.log(furtherInfoSelector.value);
-  //  console.log(assignedListDiv);
-  //  console.log(commentListDiv);
-  //  console.log(issueListDiv);
-  if (furtherInfoSelector.value === "Assigned") {
-    //    console.log(`show assigned`);
-    assignedListDiv.style.display = "block";
-    commentListDiv.style.display = "none";
-    issueListDiv.style.display = "none";
-    //    console.log(assignedListDiv);
-    //    console.log(commentListDiv);
-    //    console.log(issueListDiv);
-    return;
-  } else if (furtherInfoSelector.value === "Comments") {
-    //    console.log(`show Comments`);
-    assignedListDiv.style.display = "none";
-    commentListDiv.style.display = "block";
-    issueListDiv.style.display = "none";
-    //    console.log(assignedListDiv);
-    //    console.log(commentListDiv);
-    //    console.log(issueListDiv);
-    return;
-  } else if (furtherInfoSelector.value === "Issues") {
-    //    console.log(`show issues`);
-    assignedListDiv.style.display = "none";
-    commentListDiv.style.display = "none";
-    issueListDiv.style.display = "block";
-    //    console.log(assignedListDiv);
-    //    console.log(commentListDiv);
-    //    console.log(issueListDiv);
-  } else {
-    assignedListDiv.style.display = "none";
-    commentListDiv.style.display = "none";
-    issueListDiv.style.display = "none";
-  }
-});
+// furtherInfoSelector.addEventListener("change", () => {
+//   //  console.log(furtherInfoSelector.value);
+//   //  console.log(assignedListDiv);
+//   //  console.log(commentListDiv);
+//   //  console.log(issueListDiv);
+//   if (furtherInfoSelector.value === "Assigned") {
+//     //    console.log(`show assigned`);
+//     assignedListDiv.style.display = "block";
+//     commentListDiv.style.display = "none";
+//     issueListDiv.style.display = "none";
+//     //    console.log(assignedListDiv);
+//     //    console.log(commentListDiv);
+//     //    console.log(issueListDiv);
+//     return;
+//   } else if (furtherInfoSelector.value === "Comments") {
+//     //    console.log(`show Comments`);
+//     assignedListDiv.style.display = "none";
+//     commentListDiv.style.display = "block";
+//     issueListDiv.style.display = "none";
+//     //    console.log(assignedListDiv);
+//     //    console.log(commentListDiv);
+//     //    console.log(issueListDiv);
+//     return;
+//   } else if (furtherInfoSelector.value === "Issues") {
+//     //    console.log(`show issues`);
+//     assignedListDiv.style.display = "none";
+//     commentListDiv.style.display = "none";
+//     issueListDiv.style.display = "block";
+//     //    console.log(assignedListDiv);
+//     //    console.log(commentListDiv);
+//     //    console.log(issueListDiv);
+//   } else {
+//     assignedListDiv.style.display = "none";
+//     commentListDiv.style.display = "none";
+//     issueListDiv.style.display = "none";
+//   }
+// });
 
 editAsset.addEventListener("click", (e) => {
   e.preventDefault();
@@ -483,11 +493,15 @@ updateAssetFoam.addEventListener("submit", async (e) => {
 freeAsset.addEventListener("click", async () => {
   //  console.log("in free asset");
   try {
-    const result = await axios.patch(`/inventory/${id}/removeassigned`);
-    //    console.log(result.data.result);
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${localStorage.getItem("token")}`;
+    const result = await axios.patch(`/api/inventory/${id}/removeassigned`);
+    console.log(result.data.result);
     if (result.data.result === 0) {
       await setInitialValue().then(() => {
         alert(`Asset with id ${id} is now free`);
+        location.reload();
       });
     } else if (result.data.result === 3) {
       await setInitialValue().then(() => {
@@ -495,7 +509,7 @@ freeAsset.addEventListener("click", async () => {
       });
     }
   } catch (error) {
-    //    console.log(error);
+    console.log(error);
     alert("there was a error");
   }
 });
@@ -513,12 +527,15 @@ addComment.addEventListener("click", () => {
 });
 
 backBtn.addEventListener("click", () => {
-  window.location.href = `/`;
+  window.location.href = `/page/all-inventory`;
 });
 
 deleteBtn.addEventListener("click", async () => {
   try {
-    const result = await axios.delete(`/inventory/${id}`);
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${localStorage.getItem("token")}`;
+    const result = await axios.delete(`/api/inventory/${id}`);
     if (result.data.result === 0) {
       backBtn.click();
     } else {

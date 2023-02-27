@@ -4,6 +4,7 @@ const searchFoam = document.querySelector("#Search-Form");
 const searchButton = document.querySelector("#Search-Button");
 const goToAddAsset = document.querySelector("#add-asset");
 const filterCheckBox = document.querySelector("#filter");
+const logoutBtn = document.querySelector("#logout-Button");
 let dataLength;
 let assetList;
 let filteredList;
@@ -12,7 +13,11 @@ const getAllAsset = async () => {
   try {
     const {
       data: { result, data },
-    } = await axios.get("/inventory");
+    } = await axios.get("/api/inventory", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
     if (data.length === 0) {
       return (inventoryList.innerHTML =
         "<h3>Alas their is no data till yet</h3>");
@@ -109,7 +114,11 @@ filterCheckBox.addEventListener("input", async () => {
     try {
       const {
         data: { result, data },
-      } = await axios.get("/freeinventory");
+      } = await axios.get("/api/freeinventory", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       //      console.log(data);
       if (data.length === 0) {
         return (inventoryList.innerHTML =
@@ -131,6 +140,10 @@ filterCheckBox.addEventListener("input", async () => {
   }
 });
 
+logoutBtn.addEventListener("click",(e)=>{
+  e.preventDefault();
+  window.location.replace("/");
+});
 window.addEventListener("load", async (e) => {
   // e.preventDefault();
   // listPrinter = await getAllAsset();
@@ -139,5 +152,5 @@ window.addEventListener("load", async (e) => {
   goToAssetEventListner();
 
   listPrinter = await getAllAsset();
-  //  console.log(listPrinter);
+  console.log(listPrinter);
 });

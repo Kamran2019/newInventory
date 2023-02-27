@@ -21,7 +21,10 @@ const handleSubmit = async () => {
 
   if (commentFlag) {
     try {
-      const result = await axios.patch(`/inventory/${id}/comment`, {
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.getItem("token")}`;
+      const result = await axios.patch(`/api/inventory/${id}/comment`, {
         ...input,
       });
       //      console.log(result.data.result);

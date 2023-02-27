@@ -27,9 +27,12 @@ const handleSubmit = async () => {
 
   hiddenDiv.style.display = "none";
 
-  if (assignedToNameFlag && passwordFlag) {
+  if (assignedToNameFlag) {
     try {
-      const result = await axios.patch(`/inventory/${id}/assigned`, {
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${localStorage.getItem("token")}`;
+      const result = await axios.patch(`/api/inventory/${id}/assigned`, {
         ...input,
       });
       //      console.log(result.data.result);
@@ -58,12 +61,13 @@ const handleSubmit = async () => {
     hiddenDiv.classList.add("alert-danger");
     hiddenDivMessage.textContent = `Please enter Name of the person asset is being assigned to`;
     hiddenDiv.style.display = "block";
-  } else if (!passwordFlag) {
-    hiddenDiv.classList.remove("alert-success");
-    hiddenDiv.classList.add("alert-danger");
-    hiddenDivMessage.textContent = ` Please fill the password field`;
-    hiddenDiv.style.display = "block";
   }
+  // else if (!passwordFlag) {
+  //   hiddenDiv.classList.remove("alert-success");
+  //   hiddenDiv.classList.add("alert-danger");
+  //   hiddenDivMessage.textContent = ` Please fill the password field`;
+  //   hiddenDiv.style.display = "block";
+  // }
 };
 
 addAssigned.addEventListener("click", async (e) => {

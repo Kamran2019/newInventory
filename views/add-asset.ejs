@@ -4,13 +4,27 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+    />
+    <title>Add-Asset</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous"
     />
-    <title>Document</title>
+    <script
+      defer
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div
@@ -28,28 +42,33 @@
           <h1 style="font-weight: bold; font-style: italic">Add Asset</h1>
         </div>
         <form autocomplete="off" id="add-asset-foam">
-          <div class="form-group form-floating">
-            <input
-              type="text"
-              class="form-control"
-              id="device-serial-number"
-              name="device-serial-number"
-              placeholder="Device Serial Number"
-              required
-            />
-            <label for="device-serial-number">Device Serial Number</label>
-          </div>
-          <div class="p-2"></div>
-          <div class="form-group form-floating">
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              name="name"
-              placeholder="Device Name"
-              required
-            />
-            <label for="name" class="form-label">Name</label>
+          <div class="row">
+            <div class="p-2 col">
+              <div class="form-group form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="device-serial-number"
+                  name="device-serial-number"
+                  placeholder="Device Serial Number"
+                  required
+                />
+                <label for="device-serial-number">Device Serial Number</label>
+              </div>
+            </div>
+            <div class="p-2 col">
+              <div class="form-group form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  placeholder="Device Name"
+                  required
+                />
+                <label for="name" class="form-label">Name</label>
+              </div>
+            </div>
           </div>
           <div class="p-2"></div>
           <div class="form-group form-floating">
@@ -63,104 +82,113 @@
             ></textarea>
             <label for="description">Description</label>
           </div>
-          <div class="p-2"></div>
-          <div class="form-group form-floating">
-            <input
-              type="date"
-              class="form-control"
-              id="purchased-date"
-              name="purchased-date"
-              placeholder="Purchased Date"
-              required
-            />
-            <label for="purchased-date">Purchased Date</label>
-          </div>
-          <div class="p-2"></div>
-          <div class="form-group form-floating">
-            <input
-              type="text"
-              class="form-control"
-              id="purchased-from"
-              name="purchased-from"
-              placeholder="Purchased From"
-              required
-            />
-            <label for="purchased-from">Purchased From</label>
-          </div>
-          <div class="p-2"></div>
-          <div class="form-group form-floating">
-            <input
-              type="number"
-              class="form-control"
-              id="purchase-price"
-              name="purchase-price"
-              step="1"
-              min="0"
-              max="9"
-              placeholder="Purchase Price"
-              required
-            />
-            <label for="purchase-price">Purchase Price</label>
-          </div>
-          <div class="p-2"></div>
-          <div class="form-group form check">
-            <label>Device Type</label><br />
-            <div class="form-check form-check-inline required">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="device-type"
-                id="device-type-laptop"
-                value="Laptop"
-                required
-              />
-              <label class="form-check-label" for="device-type-laptop">
-                Laptop
-              </label>
+          <div class="row">
+            <div class="p-2 col">
+              <div class="form-group form-floating">
+                <input
+                  type="date"
+                  class="form-control"
+                  id="purchased-date"
+                  name="purchased-date"
+                  placeholder="Purchased Date"
+                  required
+                />
+                <label for="purchased-date">Purchased Date</label>
+              </div>
             </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="device-type"
-                id="device-type-phone"
-                value="Phone"
-                required
-              />
-              <label class="form-check-label" for="device-type-phone">
-                Phone
-              </label>
+            <div class="p-2 col">
+              <div class="form-group form-floating">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="purchased-from"
+                  name="purchased-from"
+                  placeholder="Purchased From"
+                  required
+                />
+                <label for="purchased-from">Purchased From</label>
+              </div>
+            </div>
+            <div class="p-2 col">
+              <div class="form-group form-floating">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="purchase-price"
+                  name="purchase-price"
+                  step="1"
+                  min="0"
+                  max="9"
+                  placeholder="Purchase Price"
+                  required
+                />
+                <label for="purchase-price">Purchase Price</label>
+              </div>
             </div>
           </div>
+          <div class="row">
+            <div class="p-2 col">
+              <div class="form-group form check">
+                <label>Device Type :</label>
+                <div class="form-check form-check-inline required">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="device-type"
+                    id="device-type-laptop"
+                    value="Laptop"
+                    required
+                  />
+                  <label class="form-check-label" for="device-type-laptop">
+                    Laptop
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="device-type"
+                    id="device-type-phone"
+                    value="Phone"
+                    required
+                  />
+                  <label class="form-check-label" for="device-type-phone">
+                    Phone
+                  </label>
+                </div>
+              </div>
+            </div>
 
-          <div class="p-2"></div>
-          <div class="form-group form check">
-            <label>Purchase Type</label><br />
-            <div class="form-check form-check-inline required">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="purchase-type"
-                id="purchase-type-new"
-                value="new"
-                required
-              />
-              <label class="form-check-label" for="purchase-type-new">
-                New
-              </label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="purchase-type"
-                id="purchase-type-used"
-                value="used"
-                required
-              />
-              <label class="form-check-label" for="purchase-type-used">
-                Used
-              </label>
+            <div class="p-2 col">
+              <div class="form-group form check">
+                <label>Purchase Type :</label>
+                <div class="form-check form-check-inline required">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="purchase-type"
+                    id="purchase-type-new"
+                    value="new"
+                    required
+                  />
+                  <label class="form-check-label" for="purchase-type-new">
+                    New
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="purchase-type"
+                    id="purchase-type-used"
+                    value="used"
+                    required
+                  />
+                  <label class="form-check-label" for="purchase-type-used">
+                    Used
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
           <div class="p-2"></div>
@@ -201,23 +229,6 @@
         </p>
       </div>
     </div>
-
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
-      integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
-      crossorigin="anonymous"
-    ></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
       integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
