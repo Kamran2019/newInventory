@@ -39,9 +39,9 @@ const handleSubmit = async () => {
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${localStorage.getItem("token")}`;
-
-        const data = await axios.get("/page/all-inventory")       // window.location.replace(`/page/all-inventory`);
-        console.log(data.data);
+        window.location.replace("/page/all-inventory");
+        //        const data = await axios.get("/page/all-inventory")       // window.location.replace(`/page/all-inventory`);
+        //        console.log(data.data);
       }
     } catch (error) {
       console.log(error);
