@@ -5,59 +5,81 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 require("dotenv").config();
+const passport = require("passport");
+const session = require("express-session");
+const flash = require("express-flash");
+const methodOverride = require("method-override");
 
 //extra security package
-// const helmet = require("helmet");
-// const cors = require("cors");
-// const xss = require("xss-clean");
-// const rateLimiter = require("express-rate-limit");
+const helmet = require("helmet");
+const csp = require("helmet-csp");
+const cors = require("cors");
+const xss = require("xss-clean");
+const rateLimiter = require("express-rate-limit");
 
-//routes
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-const inventoryRoute = require("./routes/inventory");
-const addInventoryRoute = require("./routes/addInventory");
-const getAssetRoute = require("./routes/asset");
-const addAssignedRoute = require("./routes/addAsigned");
-const addCommentRoute = require("./routes/addComment");
-const addIssueRoute = require("./routes/addIssue");
-const loginPageRouter = require("./routes/login");
-const authenticateUser = require("./middleware/auth");
+const initializePassport = require("./src/security/passport-config");
+initializePassport(passport);
 
-//creating app
 var app = express();
 
 // view engine setup
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "/src/views"));
 app.set("view engine", "ejs");
 
 //middleware
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 60 * 60 * 1000 },
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "/src/public")));
+app.use(flash());
+app.use(methodOverride("_method"));
 
-// app.use(
-//   rateLimiter({
-//     windowMs: 15 * 60 * 1000, // 15 minutes
-//     max: 100, // limit each IP to 100 requests per windowMs
-//   })
-// );
-// app.use(helmet());
-// app.use(cors());
-// app.use(xss());
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  })
+);
 
-//routers
-app.use("/page", indexRouter);
-app.use("/api", authenticateUser, inventoryRoute);
-app.use("/page", addInventoryRoute);
-app.use("/page", getAssetRoute);
-app.use("/page", addAssignedRoute);
-app.use("/page", addCommentRoute);
-app.use("/page", addIssueRoute);
-app.use("/", loginPageRouter);
-app.use("/users", usersRouter);
+app.use(helmet());
+app.use(
+  csp({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js",
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js",
+      ],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "https://cdn.jsdelivr.net",
+        "http://www.w3.org/2000/svg",
+      ],
+      imgSrc: ["'self'", "data:"],
+    },
+  })
+);
+
+app.use(cors());
+app.use(xss());
+
+//setting routes
+require("./src/routes")(app, passport);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
