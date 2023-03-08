@@ -5,10 +5,94 @@ const searchButton = document.querySelector("#Search-Button");
 const goToAddAsset = document.querySelector("#add-asset");
 const filterCheckBox = document.querySelector("#filter");
 const logoutBtn = document.querySelector("#logout-Button");
+const downloadAssigned = document.querySelector("#download-assigned");
+const downloadComment = document.querySelector("#download-comment");
+const downloadIssue = document.querySelector("#download-issue");
+const downloadBtn = document.querySelector("#download-now-button");
 let dataLength;
 let assetList;
 let filteredList;
 let listPrinter;
+let downloadIssueFlag = false;
+let downloadAssignedFlag = false;
+let downloadCommentFlag = false;
+const downloadCSV = (blob, filename) => {
+  if (window.navigator.msSaveOrOpenBlob) {
+    window.navigator.msSaveOrOpenBlob(blob, filename);
+  } else {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }, 0);
+  }
+};
+
+const createCSV = () => {
+  let csvContent = `Device-Serial-Number,Name,Description,Type,Purchase-Type,Purchase-Price,Purchased-From,Purchased-Date,Condition-Score,${
+    downloadAssignedFlag ? "Assigned ," : ""
+  } ${downloadCommentFlag ? "Comments ," : ""} ${
+    downloadIssueFlag ? "Issues" : ""
+  } \n`;
+  listPrinter.map((asset) => {
+    let row =
+      asset.DeviceSerialNumber +
+      "," +
+      asset.Name +
+      "," +
+      asset.Description +
+      "," +
+      asset.Type +
+      "," +
+      asset.PurchaseType +
+      "," +
+      asset.PurchasePrice +
+      "," +
+      asset.PurchasedFrom +
+      "," +
+      asset.PurchasedDate +
+      "," +
+      asset.ConditionScore;
+    if (downloadAssignedFlag) {
+      const Assigned = asset.Assigned.map(
+        (assignee, index) =>
+          `Assignee No ${index} :${assignee.assignedToName}  Date Of Assignment : ${assignee.dateOfAssignment}  Date Of Discharge : ${assignee.dateOfDischarge}  Password : ${assignee.password}`
+      ).join("");
+      console.log(`here in assignee`);
+      row = row + "," + Assigned;
+    }
+    if (downloadCommentFlag) {
+      const Comments = asset.Comments.map(
+        (Comment, index) =>
+          `Comment No ${index}   comment   :${Comment.comment}  Date Of Comment : ${Comment.dateOfComment} `
+      ).join("");
+      console.log(`here in the comments`);
+      row = row + "," + Comments;
+    }
+    if (downloadIssueFlag) {
+      const issues = asset.Issues.map(
+        (issue, index) =>
+          `Issue No ${index} :${issue.issue}  Date Of Issue : ${
+            issue.issueDate
+          }  Resolution : ${
+            issue.resolution === "" ? "not resolved " : issue.resolution
+          }`
+      ).join("");
+      console.log(`here in issues`);
+      row = row + "," + issues;
+    }
+    row = row + "\n";
+    csvContent += row;
+  });
+  const csvData = new Blob([csvContent], { type: "text/csv" });
+  downloadCSV(csvData, "Asset-List.csv");
+};
+
 const getAllAsset = async () => {
   try {
     const {
@@ -27,17 +111,50 @@ const getAllAsset = async () => {
   }
 };
 
+const getUnresolvedCount = (assetArray) => {
+  let UnresolvedCountArray = [];
+  assetArray.map((asset) => {
+    let UnresolvedCount = 0;
+    asset.Issues.map((issue) => {
+      if (issue.resolution === "") {
+        UnresolvedCount = UnresolvedCount + 1;
+      }
+    });
+    UnresolvedCountArray.push(UnresolvedCount);
+  });
+  return UnresolvedCountArray;
+};
+
 const printAssetList = (data) => {
+  const unresolved = getUnresolvedCount(data);
   assetList = data
     .map((asset, id) => {
       return `<div>
         
-        <div class=" single-inventory inventory-container border-bottom border-secondary border-1 Single-Inventory hover-overlay ripple shadow-1-strong rounded"
+        <div class="p-0 single-inventory inventory-container border-bottom border-secondary border-1 Single-Inventory hover-overlay ripple shadow-1-strong rounded"
         data-mdb-ripple-color="light single-inventory" data-id= ${asset.DeviceSerialNumber} id=Single-Inventory${id} "
         > 
         <div class="d-flex flex-row mb-3 justify-content-between">
-        <div class="p-2" id="deviceNumber${id}">${asset.DeviceSerialNumber}</div>
-        <div class="p-2">${asset.Type}</div>
+        <div class="col-3" id="deviceNumber${id}">${asset.DeviceSerialNumber}</div>
+        <div class="col-3" style="text-align: center">
+                    ${asset.Comments.length}<i>
+                      <img
+                        src="/icons/comment.svg"
+                        style="height: 50px; width: 20px"
+                        alt=""
+                      />
+                    </i>
+                  </div>
+                  <div class="col-3" style="text-align: center">
+                  ${unresolved[id]} <i>
+                    <img
+                      src="/icons/issue.svg"
+                      style="height: 50px; width: 20px"
+                      alt=""
+                    />
+                  </i>
+                </div>          
+        <div class="col-3" style="text-align: right">${asset.Type}</div>
         </div>
         <div id ="on_hover_${id}" class="dropdown" style="display: none"> 
         <div class="d-flex flex-column justify-content-between mb-3 align-items-center">
@@ -96,6 +213,34 @@ searchButton.addEventListener("click", (e) => {
   onSubmitter();
 });
 
+downloadAssigned.addEventListener("input", () => {
+  if (downloadAssigned.checked) {
+    downloadAssignedFlag = true;
+  } else {
+    downloadAssignedFlag = false;
+  }
+});
+
+downloadComment.addEventListener("input", () => {
+  if (downloadComment.checked) {
+    downloadCommentFlag = true;
+  } else {
+    downloadCommentFlag = false;
+  }
+});
+
+downloadIssue.addEventListener("input", () => {
+  if (downloadIssue.checked) {
+    downloadIssueFlag = true;
+  } else {
+    downloadIssueFlag = false;
+  }
+});
+
+downloadBtn.addEventListener("click", () => {
+  createCSV();
+});
+
 filterCheckBox.addEventListener("input", async () => {
   if (filterCheckBox.checked) {
     try {
@@ -133,3 +278,55 @@ window.addEventListener("load", async (e) => {
   goToAssetEventListner();
   listPrinter = await getAllAsset();
 });
+
+// const data = [
+//   {
+//     "name": "John Doe",
+//     "age": 30,
+//     "addresses": [
+//       {
+//         "street": "123 Main St",
+//         "city": "Anytown",
+//         "state": "CA",
+//         "zip": "12345"
+//       },
+//       {
+//         "street": "456 Elm St",
+//         "city": "Othertown",
+//         "state": "CA",
+//         "zip": "67890"
+//       }
+//     ]
+//   },
+//   {
+//     "name": "Jane Doe",
+//     "age": 25,
+//     "addresses": [
+//       {
+//         "street": "789 Oak St",
+//         "city": "Somewhere",
+//         "state": "CA",
+//         "zip": "45678"
+//       }
+//     ]
+//   }
+// ];
+
+// Get a list of all the unique keys in the objects
+// const keys = Array.from(new Set(data.flatMap(Object.keys)));
+
+// Create the header row with the keys
+// const header = keys.join(",") + ",addresses";
+
+// Convert each object into a CSV row
+// const rows = data.map((obj) => {
+//   const values = keys.map((key) => obj[key] ?? "");
+// const addresses = obj.addresses
+//   .map((addr) => `${addr.street}, ${addr.city}, ${addr.state} ${addr.zip}`)
+//   .join(";");
+// return [...values, addresses];
+// });
+
+// Combine the header and rows into a single CSV string
+// const csv = [header, ...rows].map((row) => row.join(",")).join("\n");
+// console.log(csv);

@@ -1,8 +1,9 @@
-const firebase = require("firebase");
+const admin = require("firebase-admin");
 const config = require("./config");
+const key = require("../key.json");
 
 //console.log(`in db`);
-const db = firebase.initializeApp(config.firebaseConfig);
-//console.log(`db initialize`);
+admin.initializeApp({ credential: admin.credential.cert(config) });
+console.log(`db initialize`);
 
-module.exports = db;
+module.exports = admin;

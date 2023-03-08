@@ -1,5 +1,6 @@
 const LocalStrategy = require("passport-local").Strategy;
 const { loginService } = require("../services/user");
+const userDb = require("../model/user");
 function initialize(passport) {
   const authenticateUser = async (email, password, done) => {
     const body = { email, password };
@@ -22,11 +23,23 @@ function initialize(passport) {
   );
   passport.serializeUser((user, done) => {
     console.log("serialize");
-    return done(null, user);
+    return done(null, user.email);
   });
-  passport.deserializeUser((user, done) => {
+  passport.deserializeUser((email, done) => {
     console.log("deserialize");
-    return done(null, user);
+    userDb
+      .doc(email)
+      .get()
+      .then((doc) => {
+        if (!doc.exists) {
+          done(new Error("User not found."));
+        } else {
+          done(null, doc.data());
+        }
+      })
+      .catch((err) => {
+        done(err);
+      });
   });
 }
 module.exports = initialize;

@@ -31,13 +31,32 @@
       <% if(data.result === 1) { %>
       <h3>Alas their is no data till yet</h3>
       <% } else { %>
-      <button class="btn btn-primary" type="click" id="logout-Button">
-        Logout
-      </button>
+      <div class="d-flex justify-content-around p-1">
+        <button class="btn btn-danger" type="click" id="logout-Button">
+          Logout
+        </button>
+        <div style="position: sticky">
+          <button
+            class="btn btn-outline-info Resolve"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#Download-modal"
+          >
+            <i>
+              <img
+                src="/icons/download.svg"
+                style="height: 20px; width: 20px"
+                alt=""
+              />
+            </i>
+          </button>
+          Download the Asset-List CSV
+        </div>
+      </div>
       <div class="m-2 d-flex flex-column justify-content-center">
         <nav
           class="navbar navbar-light rounded"
-          style="background-color: #08246c"
+          style="background-color: #08246c; position: sticky"
         >
           <div class="container-fluid">
             <span class="navbar-brand mb-0 h1 fs-2" style="color: white"
@@ -100,11 +119,34 @@
                 id="Single-Inventory${id}"
                 data-id="<%= asset.DeviceSerialNumber %>"
               >
-                <div class="d-flex flex-row mb-3 justify-content-between">
-                  <div class="p-2" id="deviceNumber<%=id%>">
+                <div class="d-flex flex-row mb-3 justify-content-between p-0">
+                  <div class="col-3" id="deviceNumber<%=id%>">
                     <%= asset.DeviceSerialNumber %>
                   </div>
-                  <div class="p-2"><%= asset.Type %></div>
+                  <div class="col-3" style="text-align: center">
+                    <%= asset.Comments.length %><i>
+                      <img
+                        src="/icons/comment.svg"
+                        style="height: 50px; width: 20px"
+                        alt=""
+                      />
+                    </i>
+                  </div>
+                  <%let unresolved =0 ; %> <% asset.Issues.map((issue)=>{ %> <%
+                  if(issue.resolution === '') { %> <% unresolved = unresolved +
+                  1; %> <% } %> <%})%>
+                  <div class="col-3" style="text-align: center">
+                    <%= unresolved %><i>
+                      <img
+                        src="/icons/issue.svg"
+                        style="height: 50px; width: 20px"
+                        alt=""
+                      />
+                    </i>
+                  </div>
+                  <div class="col-3" style="text-align: right">
+                    <%= asset.Type %>
+                  </div>
                 </div>
                 <div
                   id="on_hover_<%= id%>"
@@ -172,7 +214,67 @@
         </div>
       </div>
       <% }%>
+      <div id="Download-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-bs-dismiss="modal">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div id="foam-div">
+                <form autocomplete="off" id="download-foam">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value="nothing"
+                      id="download-assigned"
+                    />
+                    <label class="form-check-label" for="download-assigned">
+                      Assigned
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value="nothing"
+                      id="download-issue"
+                    />
+                    <label class="form-check-label" for="download-issue">
+                      Issue
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value="nothing"
+                      id="download-comment"
+                    />
+                    <label class="form-check-label" for="download-comment">
+                      Comment
+                    </label>
+                  </div>
+                </form>
+                <div class="d-flex justify-content-center p-2">
+                  <button
+                    type="click"
+                    class="btn btn-primary mx-auto"
+                    id="download-now-button"
+                  >
+                    Download Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
       integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="

@@ -4,11 +4,13 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-require("dotenv").config();
 const passport = require("passport");
 const session = require("express-session");
 const flash = require("express-flash");
 const methodOverride = require("method-override");
+const FirestoreStore = require("firestore-store")(session);
+
+const admin = require("./src/db/db-connection");
 
 //extra security package
 const helmet = require("helmet");
@@ -27,8 +29,28 @@ app.set("views", path.join(__dirname, "/src/views"));
 app.set("view engine", "ejs");
 
 //middleware
+// app.use(session({
+//   cookie:{
+//       secure: true,
+//       maxAge:60000
+//          },
+//   store: new RedisStore(),
+//   secret: 'secret',
+//   saveUninitialized: true,
+//   resave: false
+//   }));
+
+// Get Firestore Database from Admin SDK
+const db = admin.firestore();
+
+// Use FirestoreStore for Express session store
+const store = new FirestoreStore({
+  database: db,
+});
+
 app.use(
   session({
+    store: store,
     secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -79,7 +101,7 @@ app.use(cors());
 app.use(xss());
 
 //setting routes
-require("./src/routes")(app, passport);
+require("./src/routes")(app, passport, admin);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

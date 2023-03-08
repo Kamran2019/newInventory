@@ -1,6 +1,7 @@
 // A custom object representing the inventory details class
-const firebase = require("../db/db-connection");
-const db = firebase.firestore();
+const admin = require("../db/db-connection");
+//require()
+const db = admin.firestore();
 const tables = require("./index").collectionNames;
 
 class User {
